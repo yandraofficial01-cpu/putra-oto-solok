@@ -67,7 +67,6 @@
    .card:hover {transform:translateY(-8px); box-shadow:0 20px 40px #00000020;}
    .mobil-card {position:relative;}
    
-   /* FRAME EMAS KELILING CARD HOT DEAL - FIX */
    .mobil-card.hot-item {
      position: relative;
      border: 3px solid transparent;
@@ -191,8 +190,7 @@
       <h1>PUTRA OTO SOLOK</h1>
       <p class="subtitle">Spesialis mobil bekas berkualitas di Solok. Harga jujur, kondisi apa adanya, siap pakai.</p>
     </div>
-  </header>
-  <main class="container">
+  </header>  <main class="container">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Cari: Avanza, Pajero, Matic, 2020..." onkeyup="filterMobil()">
       <span class="search-icon">🔍</span>
@@ -235,9 +233,7 @@ const CONFIG = {
   SLUG_SHOWROOM: 'putra-oto-solok'
 }
 
-// UDAH FIX: Langsung pake CONFIG biar gak kebaca 'index.html'
 const SLUG_SHOWROOM_INI = CONFIG.SLUG_SHOWROOM;
-
 const API_URL = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_INDUK_ID}/gviz/tq?tqx=out:json&gid=${CONFIG.GID_SHOWROOM}`
 let allMobil = []
 
@@ -264,14 +260,14 @@ function setWaFloat(){
   const text = `Halo ${CONFIG.NAMA_SHOWROOM}, mau tanya stok mobil dong`
   waBtn.href = `https://wa.me/${CONFIG.NO_WA_SHOWROOM}?text=${encodeURIComponent(text)}`
 
-  // TRACK KLIK WA FLOAT
+  // TRACK KLIK WA FLOAT - UDAH DITAMBAH sumber_web
   waBtn.addEventListener('click', function() {
     gtag('event', 'klik_wa', {
       'mobil': 'WA Float Button',
       'harga': 0,
       'tahun': 0,
       'showroom': CONFIG.NAMA_SHOWROOM,
-      'anak_web': SLUG_SHOWROOM_INI,
+      'sumber_web': SLUG_SHOWROOM_INI,
       'tipe_klik': 'float'
     });
   });
@@ -390,7 +386,7 @@ function renderMobil(dataMobil){
                'harga': ${Number(harga) || 0},
                'tahun': ${Number(tahun) || 0},
                'showroom': '${CONFIG.NAMA_SHOWROOM}',
-               'anak_web': '${SLUG_SHOWROOM_INI}',
+               'sumber_web': '${SLUG_SHOWROOM_INI}',
                'tipe_klik': 'card'
              })">Tanya Sales</a>
           <button onclick="shareMobil('${encodeURIComponent(textShare)}')" class="share-btn">Share ke Teman</button>
