@@ -219,7 +219,7 @@
     <span class="zoom-close" onclick="closeZoom()">&times;</span>
     <img class="zoom-content" id="zoomImg" src="">
     <div class="zoom-info">Pinch untuk zoom • Tap & drag untuk geser</div>
-  </div>  <script>
+  </div><script>
 const CONFIG = {
   NAMA_SHOWROOM: 'Putra Oto Solok',
   NO_WA_SHOWROOM: '6289668381500',
@@ -253,14 +253,14 @@ document.documentElement.setAttribute('data-theme', savedTheme)
 document.querySelector('.theme-toggle').textContent = savedTheme === 'dark'? '☀️' : '🌙'
 
 const safeString = val => String(val || '').trim().replace(/[\r\n]/g,'')
-const isReady = status => safeString(status).toLowerCase() === 'ready'
+// UDAH DIGANTI: READY → AKTIF
+const isAktif = status => safeString(status).toLowerCase() === 'aktif'
 
 function setWaFloat(){
   const waBtn = document.getElementById('waFloat')
   const text = `Halo ${CONFIG.NAMA_SHOWROOM}, mau tanya stok mobil dong`
   waBtn.href = `https://wa.me/${CONFIG.NO_WA_SHOWROOM}?text=${encodeURIComponent(text)}`
 
-  // TRACK KLIK WA FLOAT - UDAH DITAMBAH sumber_web
   waBtn.addEventListener('click', function() {
     gtag('event', 'klik_wa', {
       'mobil': 'WA Float Button',
@@ -302,7 +302,8 @@ async function loadMobil(){
     allMobil = cleanData
  .filter(m => {
         const slugBenar = safeString(m.slug_showroom).toLowerCase() === SLUG_SHOWROOM_INI.toLowerCase();
-        const statusBenar = isReady(m.status_anak);
+        // UDAH DIGANTI: isReady → isAktif + cek status_induk juga
+        const statusBenar = isAktif(m.status_anak) && isAktif(m.status_induk);
         return slugBenar && statusBenar;
       })
  .slice(0, 40)
@@ -310,19 +311,20 @@ async function loadMobil(){
     renderMobil(allMobil)
   } catch(err) {
     console.error(err)
-    document.getElementById('daftar-mobil').innerHTML = `<div class="card"><p style="padding:20px;">⚠️ Gagal load data.<br>1. Cek Sheet udah "File → Share → Publish to web"<br>2. Cek kolom D slug_showroom = ${SLUG_SHOWROOM_INI}<br>3. Cek kolom Z status_anak = READY</p></div>`
+    // PESAN ERROR UDAH DIGANTI: READY → AKTIF
+    document.getElementById('daftar-mobil').innerHTML = `<div class="card"><p style="padding:20px;">⚠️ Gagal load data.<br>1. Cek Sheet udah "File → Share → Publish to web"<br>2. Cek kolom D slug_showroom = ${SLUG_SHOWROOM_INI}<br>3. Cek kolom Z status_anak = AKTIF & kolom AA status_induk = AKTIF</p></div>`
   }
 }
 
 function renderMobil(dataMobil){
   const container = document.getElementById('daftar-mobil')
   if(dataMobil.length === 0){
-    container.innerHTML = `<div class="no-result">Belum ada mobil READY untuk showroom ini.<br>Cek kolom D = ${SLUG_SHOWROOM_INI} dan kolom Z = READY di Sheet.</div>`
+    // PESAN ERROR UDAH DIGANTI: READY → AKTIF
+    container.innerHTML = `<div class="no-result">Belum ada mobil AKTIF untuk showroom ini.<br>Cek kolom D = ${SLUG_SHOWROOM_INI}, kolom Z = AKTIF, dan kolom AA = AKTIF di Sheet.</div>`
     return
-  }
-  container.innerHTML = dataMobil.map((mobil, i) => {
+  }container.innerHTML = dataMobil.map((mobil, i) => {
     const fotos = [mobil.foto_1, mobil.foto_2, mobil.foto_3, mobil.foto_4, mobil.foto_5, mobil.foto_6]
- .filter(f => safeString(f)!== '' &&!f.includes('GANTI_LINK'))
+.filter(f => safeString(f)!== '' &&!f.includes('GANTI_LINK'))
     const merk = mobil.merk || ''
     const tipe = mobil.tipe || ''
     const tahun = mobil.tahun || ''
@@ -511,6 +513,6 @@ modal.addEventListener('click', e => {
 setWaFloat()
 loadMobil()
 setInterval(loadMobil, 300000)
-  </script>
+</script>
 </body>
 </html>
